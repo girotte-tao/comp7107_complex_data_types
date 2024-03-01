@@ -3,3 +3,7 @@ dataset
 .idea
 
 */__pycache__
+
+*.dir
+
+*.grd
