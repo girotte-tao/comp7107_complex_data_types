@@ -39,13 +39,13 @@ class SpatialDataIndex:
         with open(file_path, 'w') as file:
             for point in self.sorted_points:
                 # Writing the coordinate of each point to the file, line by line
-                file.write(f"{point.identifier} {point.coordinate[0]} {point.coordinate[1]}\n")
+                file.write(f"{point.identifier} {point.coordinate[0]:.6f} {point.coordinate[1]:.6f}\n")
         print(f"Coordinates of sorted points have been saved to f{file_path}")
 
 
     def save_cell_index(self, file_path):
         with open(file_path, 'w') as file:
-            file.write(f"{self.dataset.x_min} {self.dataset.x_max} {self.dataset.y_min} {self.dataset.y_max}\n")
+            file.write(f"{self.dataset.x_min:.6f} {self.dataset.x_max:.6f} {self.dataset.y_min:.6f} {self.dataset.y_max:.6f}\n")
 
             cur_character_num = 0
             for domain in self.sorted_domains:
@@ -68,7 +68,7 @@ class CellDomain:
 
             self.first_identifier = data_frame.identifier
         self.data_frame_number = self.data_frame_number + 1
-        self.character_length = self.character_length + len(data_frame.raw_data) + 5 + 1
+        self.character_length = self.character_length + len(f"{data_frame.x_coordinate:.6f}") + len(f"{data_frame.y_coordinate:.6f}") + len(str(data_frame.identifier))+ 3
 
 class CellDomainManager:
     def __init__(self):
