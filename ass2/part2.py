@@ -1,4 +1,4 @@
-from searcher import GridSearcher
+from searcher import GridBoundQuerySearcher
 from dataIndex import GridDirIndex
 from grid_dataset import GridDataset
 
@@ -8,7 +8,7 @@ if __name__ == '__main__':
     grid_grd_path = "grid.grd"
     index = GridDirIndex(grid_dir_path)
     dataset = GridDataset(grid_grd_path, index)
-    searcher = GridSearcher(index, dataset)
+    searcher = GridBoundQuerySearcher(index, dataset)
 
     while True:
         x_lower_input = input('Please enter the lower bound of x axis or type "exit" to quit:')
@@ -31,5 +31,5 @@ if __name__ == '__main__':
             break
         y_upper = float(y_upper_input)
 
-        points = searcher.search_and_print(x_lower, x_upper, y_lower, y_upper)
+        points = searcher.search_and_print_by_bound(x_lower, x_upper, y_lower, y_upper)
 

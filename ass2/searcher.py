@@ -4,7 +4,7 @@ from dataset_constructor import DataFrame
 from grid_dataset import GridDataset
 
 
-class GridSearcher:
+class GridBoundQuerySearcher:
     def __init__(self, index: GridDirIndex, dataset: GridDataset):
         self.index = index
         self.dataset = dataset
@@ -41,6 +41,6 @@ class GridSearcher:
         print(len(points))
         return
 
-    def search_and_print(self, x_lower_bound, x_upper_bound, y_lower_bound, y_upper_bound):
+    def search_and_print_by_bound(self, x_lower_bound, x_upper_bound, y_lower_bound, y_upper_bound):
         return self.print_by_point_list(
             self.search_by_bound(x_lower_bound, x_upper_bound, y_lower_bound, y_upper_bound))
