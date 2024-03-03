@@ -192,4 +192,7 @@ class GridDirIndex:
 
         return list(cells)
 
-
+    def get_cell_by_point(self, point: DataFrame):
+        cell0 = self.get_level(point.x_coordinate, self.x_levels)
+        cell1 = self.get_level(point.y_coordinate, self.y_levels)
+        return (cell0, cell1)
