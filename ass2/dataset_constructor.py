@@ -33,7 +33,7 @@ class SpatialDataset:
                     y_coordinates.append(longitude)
                     # Store the coordinates as a tuple in the list
                     restaurant_coordinates.append((latitude, longitude))
-                    data_frame = dataFrame(identifier, latitude, longitude, raw_line)
+                    data_frame = DataFrame(identifier, latitude, longitude, raw_line)
                     data_frames.append(data_frame)
         return restaurant_coordinates, x_coordinates, y_coordinates, data_frames
 
@@ -48,7 +48,7 @@ class SpatialDataset:
             i.print_data_frame_cell()
 
 
-class dataFrame:
+class DataFrame:
     def __init__(self, identifier, x_coordinate, y_coordinate, raw_data):
         self.raw_data = raw_data
         self.identifier = identifier
@@ -62,3 +62,5 @@ class dataFrame:
 
     def print_data_frame_cell(self):
         print(self.cell)
+
+
