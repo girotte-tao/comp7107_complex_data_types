@@ -53,7 +53,6 @@ class GridNearestKSearcher:
         self.index = index
         self.dataset = dataset
         self.visited_cells = set()
-        # self.visited_points = set()
         self.priority_queue = []
 
     def search_neighbor_cells(self, cell):
@@ -145,3 +144,8 @@ class GridNearestKSearcher:
                 break
         print('Cells with their contents read:')
         print(self.visited_cells)
+        self.clear()
+
+    def clear(self):
+        self.visited_cells = set()
+        self.priority_queue = []
