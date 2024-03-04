@@ -133,6 +133,7 @@ class GridNearestKSearcher:
         self.initialize_search(point)
 
         generator = self.nearest_k_generator(point)
+        print('Search results:')
         for i in range(k):
             try:
                 p = next(generator)
@@ -142,3 +143,5 @@ class GridNearestKSearcher:
                     break
             except StopIteration:
                 break
+        print('Cells with their contents read:')
+        print(self.visited_cells)

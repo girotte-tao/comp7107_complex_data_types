@@ -21,7 +21,7 @@ if __name__ == '__main__':
             break
         y_coordinate = float(y_coordinate)
 
-        k = input('Please enter the coordinate of y axis or type "exit" to quit:')
+        k = input('Please enter k or type "exit" to quit:')
         if k.lower() == 'exit':
             break
         k = int(k)
