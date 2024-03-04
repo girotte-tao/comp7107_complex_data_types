@@ -27,11 +27,11 @@ class GridDataset:
                         lines.append(line)
                     self.cell_points_dict[cell] = self.get_data_frames_by_lines(lines)
         except FileNotFoundError:
-            print(f"文件 {filename} 未找到。")
+            print(f"File {filename} not found.")
         except IOError:
-            print(f"读取文件 {filename} 时出错。")
+            print(f"Error when reading file {filename}.")
         except Exception as e:
-            print(f"发生错误：{e}")
+            print(f"Error：{e}")
 
     def get_data_frames_by_lines(self, lines):
         data_frames = []

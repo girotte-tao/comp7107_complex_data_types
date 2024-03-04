@@ -24,7 +24,7 @@ class GridBoundQuerySearcher:
     def get_points_by_cells(self, cells):
         points = []
         for cell in cells:
-            points.append(self.dataset.cell_points_dict[cell])
+            points = points + self.dataset.cell_points_dict[cell]
         return points
 
     def is_target(self, point: DataFrame, grid_bound: GridBound):
@@ -38,9 +38,14 @@ class GridBoundQuerySearcher:
         return points_in_between + points_bound
 
     def print_by_point_list(self, points: List[DataFrame]):
+
         for point in points:
-            print(f'{point.identifier} {point.x_coordinate} {point.y_coordinate}')
-        print(len(points))
+            try:
+                print(f'{point.identifier} {point.x_coordinate} {point.y_coordinate}')
+            except Exception as e:
+                print(e, point)
+        print(f'Total number of the query result is {len(points)}.')
+
         return
 
     def search_and_print_by_bound(self, x_lower_bound, x_upper_bound, y_lower_bound, y_upper_bound):
