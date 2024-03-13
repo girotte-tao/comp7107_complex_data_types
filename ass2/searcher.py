@@ -11,11 +11,12 @@ class GridBoundQuerySearcher:
         self.index = index
         self.dataset = dataset
 
-    def get_bound_level_target_points(self, grid_bound: GridBound):
+    def get_bound_level_target_points(self, grid_bound: GridBound, cells_in_between):
         target_points = []
-        cells_bound = self.index.get_bound_cells(grid_bound)
+        cells_bound = self.index.get_bound_cells(grid_bound, cells_in_between)
         for cell in cells_bound:
-            for point in self.dataset.cell_points_dict[cell]:
+            points = self.dataset.cell_points_dict.get(cell, [])
+            for point in points:
                 if self.is_target(point, grid_bound):
                     target_points.append(point)
 
@@ -34,7 +35,7 @@ class GridBoundQuerySearcher:
         grid_bound = GridBound(x_lower_bound, x_upper_bound, y_lower_bound, y_upper_bound)
         cells_in_between = self.index.get_cells_in_between(grid_bound)
         points_in_between = self.get_points_by_cells(cells_in_between)
-        points_bound = self.get_bound_level_target_points(grid_bound)
+        points_bound = self.get_bound_level_target_points(grid_bound, cells_in_between)
         return points_in_between + points_bound
 
     def print_by_point_list(self, points: List[DataFrame]):
@@ -143,6 +144,7 @@ class GridNearestKSearcher:
                 p = next(generator)
                 if p is not None:
                     print(f"{p.identifier} {p.x_coordinate} {p.y_coordinate}")
+                    pass
                 else:
                     break
             except StopIteration:

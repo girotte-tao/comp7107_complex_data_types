@@ -16,8 +16,10 @@ class SpatialDataIndex:
     def get_level(self, value, levels):
         level = 0
         for i in range(len(levels)):
-            if value > levels[i]:
+            if value >= levels[i]:
                 level = i
+                if level == 10:
+                    level = 9
             else:
                 break
         return level
@@ -39,6 +41,13 @@ class SpatialDataIndex:
             for point in self.sorted_points:
                 # Writing the coordinate of each point to the file, line by line
                 file.write(f"{point.identifier} {point.coordinate[0]:.6f} {point.coordinate[1]:.6f}\n")
+        print(f"Coordinates of sorted points have been saved to f{file_path}")
+
+    def save_sorted_coordinates_with_cell(self, file_path):
+        with open(file_path, 'w') as file:
+            for point in self.sorted_points:
+                # Writing the coordinate of each point to the file, line by line
+                file.write(f"{point.cell} {point.identifier} {point.coordinate[0]:.6f} {point.coordinate[1]:.6f}\n")
         print(f"Coordinates of sorted points have been saved to f{file_path}")
 
     def save_cell_index(self, file_path):
@@ -103,6 +112,9 @@ class GridBound:
         self.y_lower_bound = y_lower_bound
         self.y_upper_bound = y_upper_bound
 
+    def __str__(self):
+        return f'{self.x_lower_bound}, {self.x_upper_bound}, {self.y_lower_bound}, {self.y_upper_bound}'
+
 
 class GridDirIndexFrame:
     def __init__(self, cell, char_index, point_num, grid_bound: GridBound):
@@ -152,17 +164,19 @@ class GridDirIndex:
     def get_level(self, value, levels):
         level = 0
         for i in range(len(levels)):
-            if value > levels[i]:
+            if value >= levels[i]:
                 level = i
+                if level == 10:
+                    level = 9
             else:
                 break
         return level
 
     def get_cells_in_between(self, grid_bound: GridBound):
         x_lower_bound_level = self.get_level(grid_bound.x_lower_bound, self.x_levels)
-        x_upper_bound_level = self.get_level(grid_bound.x_upper_bound, self.x_levels) + 1
+        x_upper_bound_level = self.get_level(grid_bound.x_upper_bound, self.x_levels)
         y_lower_bound_level = self.get_level(grid_bound.y_lower_bound, self.y_levels)
-        y_upper_bound_level = self.get_level(grid_bound.y_upper_bound, self.y_levels) + 1
+        y_upper_bound_level = self.get_level(grid_bound.y_upper_bound, self.y_levels)
 
         cells_in_between = []
 
@@ -175,22 +189,18 @@ class GridDirIndex:
     def is_point_in_between(self, data_frame: DataFrame, grid_bound: GridBound):
         return grid_bound.x_lower_bound < data_frame.x_coordinate < grid_bound.x_upper_bound and grid_bound.y_lower_bound < data_frame.y_coordinate < grid_bound.y_upper_bound
 
-    def get_bound_cells(self, grid_bound: GridBound):
+    def get_bound_cells(self, grid_bound: GridBound, cells_in_between):
         x_lower_bound_level = self.get_level(grid_bound.x_lower_bound, self.x_levels)
         x_upper_bound_level = self.get_level(grid_bound.x_upper_bound, self.x_levels)
         y_lower_bound_level = self.get_level(grid_bound.y_lower_bound, self.y_levels)
         y_upper_bound_level = self.get_level(grid_bound.y_upper_bound, self.y_levels)
 
-        cells = set()
-        cells.add((x_lower_bound_level, y_lower_bound_level))
-        for x in range(x_upper_bound_level - x_lower_bound_level):
-            cells.add((x_lower_bound_level + x + 1, y_lower_bound_level))
-            cells.add((x_lower_bound_level + x + 1, y_upper_bound_level))
-        for y in range(y_upper_bound_level - y_lower_bound_level):
-            cells.add((y_lower_bound_level + y + 1, x_lower_bound_level))
-            cells.add((y_lower_bound_level + y + 1, x_upper_bound_level))
+        cells = set([(x,y) for x in range(x_upper_bound_level - x_lower_bound_level + 1) for y in range(y_upper_bound_level - y_lower_bound_level + 1)])
+        cells_in_between_set = set(cells_in_between)
 
-        return list(cells)
+        print('list(cells-cells_in_between_set)', list(cells-cells_in_between_set))
+
+        return list(cells-cells_in_between_set)
 
     def get_cell_by_point(self, point: DataFrame):
         cell0 = self.get_level(point.x_coordinate, self.x_levels)

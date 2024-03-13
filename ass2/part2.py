@@ -2,6 +2,15 @@ from searcher import GridBoundQuerySearcher
 from dataIndex import GridDirIndex
 from grid_dataset import GridDataset
 
+def get_float_input(prompt):
+    while True:
+        user_input = input(prompt)
+        if user_input.lower() == 'exit':
+            return None
+        try:
+            return float(user_input)
+        except ValueError:
+            print("Invalid input. Please enter a valid number or type 'exit' to quit.")
 
 if __name__ == '__main__':
     grid_dir_path = "grid.dir"
@@ -11,25 +20,20 @@ if __name__ == '__main__':
     searcher = GridBoundQuerySearcher(index, dataset)
 
     while True:
-        x_lower_input = input('Please enter the lower bound of x axis or type "exit" to quit:')
-        if x_lower_input.lower() == 'exit':
+        x_lower = get_float_input('Please enter the lower bound of x axis or type "exit" to quit:')
+        if x_lower is None:
             break
-        x_lower = float(x_lower_input)
 
-        x_upper_input = input('Please enter the upper bound of x axis or type "exit" to quit:')
-        if x_upper_input.lower() == 'exit':
+        x_upper = get_float_input('Please enter the upper bound of x axis or type "exit" to quit:')
+        if x_upper is None:
             break
-        x_upper = float(x_upper_input)
 
-        y_lower_input = input('Please enter the lower bound of y axis or type "exit" to quit:')
-        if y_lower_input.lower() == 'exit':
+        y_lower = get_float_input('Please enter the lower bound of y axis or type "exit" to quit:')
+        if y_lower is None:
             break
-        y_lower = float(y_lower_input)
 
-        y_upper_input = input('Please enter the upper bound of y axis or type "exit" to quit:')
-        if y_upper_input.lower() == 'exit':
+        y_upper = get_float_input('Please enter the upper bound of y axis or type "exit" to quit:')
+        if y_upper is None:
             break
-        y_upper = float(y_upper_input)
 
         points = searcher.search_and_print_by_bound(x_lower, x_upper, y_lower, y_upper)
-
