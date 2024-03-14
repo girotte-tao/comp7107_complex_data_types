@@ -155,8 +155,8 @@ class GridDirIndex:
                 if line:
                     cell0, cell1, char_index, point_num = map(int, line.split())
                     cell = (cell0, cell1)
-                    grid_bound = GridBound(self.x_levels[cell0], self.x_levels[cell0 + 1], self.y_levels[cell0],
-                                           self.y_levels[cell1])
+                    grid_bound = GridBound(self.x_levels[cell0], self.x_levels[cell0 + 1], self.y_levels[cell1],
+                                           self.y_levels[cell1 + 1])
                     grid_dir_index_frame = GridDirIndexFrame(cell, char_index, point_num, grid_bound)
                     self.grid_index_dict[cell] = grid_dir_index_frame
         return

@@ -71,7 +71,7 @@ class GridNearestKSearcher:
             for dy in (-1, 0, 1):
                 if dx != 0 or dy != 0:
                     new_cell_x = cell_x + dx
-                    new_cell_y = cell_y + dx
+                    new_cell_y = cell_y + dy
                     if 0 <= new_cell_x < 10 and 0 <= new_cell_y < 10:
                         neighbors.append((new_cell_x, new_cell_y))
         return neighbors
@@ -81,6 +81,7 @@ class GridNearestKSearcher:
         # Placeholder implementation
         # This should be replaced with actual logic to find starting cells
         starting_cell = self.index.get_cell_by_point(query_point)
+        query_point.cell = starting_cell
         self.visited_cells.add(starting_cell)
         # push all points in the starting cell
         points_in_starting_cell = self.dataset.cell_points_dict[starting_cell]
@@ -92,18 +93,33 @@ class GridNearestKSearcher:
         for point in points:
             heapq.heappush(self.priority_queue,
                            (self.get_min_dist_between_points(point, query_point), point.identifier, point))
+            # print(self.priority_queue)
 
     def push_cells(self, cells: List[GridDirIndexFrame], query_point: DataFrame):
         for cell in cells:
             heapq.heappush(self.priority_queue,
                            (self.get_min_dist_between_point_cell(cell, query_point), cell.cell, cell))
+            # print(self.priority_queue)
 
     def get_min_dist_between_point_cell(self, cell: GridDirIndexFrame, point: DataFrame):
-        dist_min = min(abs(point.x_coordinate - cell.grid_bound.x_lower_bound),
-                       abs(point.x_coordinate - cell.grid_bound.x_upper_bound),
-                       abs(point.y_coordinate - cell.grid_bound.y_lower_bound),
+
+        # if x of cell equals, use projection of y
+        # if y of cell equals, use projection of x
+        # else calculate the sqrt
+
+        point_cell_x, point_cell_y = point.cell
+        cell_x, cell_y = cell.cell
+
+        if point_cell_x == cell_x:
+            return min(abs(point.y_coordinate - cell.grid_bound.y_lower_bound),
                        abs(point.y_coordinate - cell.grid_bound.y_upper_bound))
-        return dist_min
+        elif point_cell_y == cell_y:
+            return min(abs(point.x_coordinate - cell.grid_bound.x_lower_bound),
+                       abs(point.x_coordinate - cell.grid_bound.x_upper_bound))
+        else:
+            pro_x = min(abs(cell.grid_bound.x_lower_bound - point.x_coordinate), abs(cell.grid_bound.x_upper_bound - point.x_coordinate))
+            pro_y = min(abs(cell.grid_bound.y_lower_bound - point.y_coordinate), abs(cell.grid_bound.y_upper_bound - point.y_coordinate))
+            return math.sqrt(pro_x**2+pro_y**2)
 
     def get_min_dist_between_points(self, p1: DataFrame, p2: DataFrame):
         dist = math.sqrt((p1.x_coordinate - p2.x_coordinate) ** 2 + (p1.y_coordinate - p2.y_coordinate) ** 2)

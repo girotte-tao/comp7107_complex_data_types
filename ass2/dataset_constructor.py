@@ -63,4 +63,7 @@ class DataFrame:
     def print_data_frame_cell(self):
         print(self.cell)
 
+    def __str__(self):
+        return f'({self.x_coordinate}, {self.y_coordinate}) {self.cell}'
+
 
